@@ -12,7 +12,7 @@ public class PlayerIdleState : PlayerGroundedState
     {
         base.Enter();
         
-        rb.velocity = Vector2.zero;
+        player.ZeroVelocity();
     }
 
     public override void Update()
@@ -23,7 +23,7 @@ public class PlayerIdleState : PlayerGroundedState
             return;
         }
         
-        if (xInput != 0)
+        if (xInput != 0 && !player.isBusy)
         {
             stateMachine.ChangeState(player.MoveState);   
         }

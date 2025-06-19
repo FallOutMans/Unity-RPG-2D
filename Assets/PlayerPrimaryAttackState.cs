@@ -16,12 +16,24 @@ public class PlayerPrimaryAttackState : PlayerState
     {
         base.Enter();
         
-        player.SetVelocity(new Vector2(0f, 0f));
         if (comboCounter > 2 || Time.time - lastTimeAttacked >= comboWindow)
         {
             comboCounter = 0;
         }
         player.Animator.SetInteger("ComboCounter", comboCounter);
+
+        #region Choose attack direction
+
+        float attackDir = player.FacingDirection;
+
+        if (xInput != 0)
+        {
+            attackDir = xInput;
+        }
+
+        #endregion
+        
+        player.SetVelocity(new Vector2(player.attackMovement[comboCounter].x * attackDir, player.attackMovement[comboCounter].y));
 
         StateTimer = .1f;
     }
@@ -32,7 +44,7 @@ public class PlayerPrimaryAttackState : PlayerState
 
         if (StateTimer < 0)
         {
-            rb.velocity = Vector2.zero;
+           player.ZeroVelocity();
         }
 
         if (TriggerCalled)
@@ -45,6 +57,8 @@ public class PlayerPrimaryAttackState : PlayerState
     {
         base.Exit();
 
+        player.StartCoroutine("BusyFor", .15f);
+        
         comboCounter++;
         lastTimeAttacked = Time.time;
     }

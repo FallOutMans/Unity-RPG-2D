@@ -6,6 +6,8 @@ using UnityEngine.Serialization;
 public class Player : MonoBehaviour
 {
     public bool isBusy { get; private set; }
+
+    [Header("Attack details")] public Vector2[] attackMovement;
     
     [Header("Move Info")]
     [SerializeField] public float MoveSpeed = 12f;
@@ -75,8 +77,15 @@ public class Player : MonoBehaviour
 
         CheckForDashInput();
     }
-    
-    public IEnumerator
+
+    public IEnumerator BusyFor(float waitTime)
+    {
+        isBusy = true;
+        
+        yield return new WaitForSeconds(waitTime);
+        
+        isBusy = false;
+    }
 
     public void AnimationTrigger() => StateMachine.CurrentState.AnimationFinishTrigger();
 
@@ -103,14 +112,21 @@ public class Player : MonoBehaviour
         }
     }
 
+    #region Velocity
+
     public void SetVelocity(Vector2 velocity)
     {
         Rigidbody.velocity = velocity;
         FlipController(velocity.x);
     }
     
+    public void ZeroVelocity() => Rigidbody.velocity = Vector2.zero;
+
+    #endregion
+
+    #region Collision
+
     public bool IsGroundDetected() => Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, whatIsGround);
-    
     public bool IsWallDetected() => Physics2D.Raycast(wallCheck.position, Vector2.right * FacingDirection, wallCheckDistance,whatIsGround);
 
     private void OnDrawGizmos()
@@ -118,7 +134,11 @@ public class Player : MonoBehaviour
         Gizmos.DrawLine(groundCheck.position, new Vector3(groundCheck.position.x, groundCheck.position.y - groundCheckDistance));
         Gizmos.DrawLine(wallCheck.position, new Vector3(wallCheck.position.x + wallCheckDistance * FacingDirection, wallCheck.position.y));
     }
-    
+
+    #endregion
+
+    #region Flip
+
     private void FlipController(float x)
     {
         if (x > 0 && !FacingRight)
@@ -136,4 +156,6 @@ public class Player : MonoBehaviour
         FacingDirection = -FacingDirection;
         transform.Rotate(0f, 180f, 0f);
     }
+
+    #endregion
 }
