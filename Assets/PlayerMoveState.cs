@@ -17,6 +17,8 @@ public class PlayerMoveState : PlayerGroundedState
     {
         base.Update();
         
+        // TODO,判断当前状态是否是本身，不是需要返回，要不然
+        
         player.SetVelocity(new Vector2(xInput * player.MoveSpeed, rb.velocity.y));
         
         if (xInput == 0 || player.IsWallDetected())

@@ -1,9 +1,12 @@
+using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 
 public class Player : MonoBehaviour
 {
+    public bool isBusy { get; private set; }
+    
     [Header("Move Info")]
     [SerializeField] public float MoveSpeed = 12f;
     [SerializeField] public float JumpPower = 5f;
@@ -72,6 +75,8 @@ public class Player : MonoBehaviour
 
         CheckForDashInput();
     }
+    
+    public IEnumerator
 
     public void AnimationTrigger() => StateMachine.CurrentState.AnimationFinishTrigger();
 
