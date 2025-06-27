@@ -9,6 +9,13 @@ public class EnemyStateMachine
     public void Intialize(EnemyState startState)
     {
         currentState = startState;
-        
+        currentState.Enter();
+    }
+
+    public void ChangeState(EnemyState newState)
+    {
+        currentState.Exit();
+        currentState = newState;
+        currentState.Enter();
     }
 }
